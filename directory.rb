@@ -28,16 +28,35 @@ def print_footer(names)
 end
 
 def input_students
-  puts "Please enter the names of the students".center(50, "-")
-  puts "To finish, just hit return twice".center(50, "-")
-  students = []
-  name = gets.chomp
-  while !name.empty? do
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} student(s)".center(50, "-")
-    name = gets.chomp
+  students = {}
+  
+  while true 
+    puts "What do you want to do in the directory? Add, View or Exit?".center(50, "-")
+    choice = gets.chomp.downcase
+
+    case choice
+    when "add"
+      puts "Please enter the name of the student".center(50, "-")
+      student_name = gets.chomp
+      puts "What's the students cohort?".center(50, "-")
+      cohort = gets.chomp
+      if cohort == nil
+        students[:unknown] = student_name
+      else
+        students[cohort.to_s] = student_name
+      end
+    when "view"
+      count = 0
+      students.each do |cohort, name|
+        puts "#{name}, (#{cohort} cohort)"
+        count += 1
+      end
+      puts "Overall, we have #{count} great student(s)".center(50, "-")
+    when "exit"
+      puts "...Exiting the directory...".center(50, "-")
+      break
+    end
   end
-  students
 end
 
 def initial_search(students, letter)
@@ -56,8 +75,4 @@ def small_names(students)
   end
 end
 
-print(students)
-small_names(students)
-
-# Research how the method center() of the String class works. 
-# Use it in your code to make the output beautifully aligned.
+input_students
