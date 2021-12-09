@@ -1,4 +1,3 @@
-# First we print the list of students
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :november},
   {name: "Darth Vader", cohort: :november},
@@ -19,30 +18,46 @@ def print_header
 end
 
 def print(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  students.each_with_index do |student, index|
+    puts "#{index}: #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts "Overall, we have #{names.count} great student(s)"
 end
 
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
+  puts "Please enter the names of the students".center(50, "-")
+  puts "To finish, just hit return twice".center(50, "-")
   students = []
   name = gets.chomp
   while !name.empty? do
     students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{students.count} student(s)".center(50, "-")
     name = gets.chomp
   end
   students
 end
 
-#nothing happens until we call the methods
-students = input_students
-print_header
+def initial_search(students, letter)
+  students.each do |student|
+    if student[:name].chr.include?(letter)
+      puts student[:name].center(50, "-")
+    end
+  end
+end
+
+def small_names(students)
+  students.each do |student|
+    if student[:name].chars.count < 12
+      puts student[:name].center(20, "-")
+    end
+  end
+end
+
 print(students)
-print_footer(students)
+small_names(students)
+
+# Research how the method center() of the String class works. 
+# Use it in your code to make the output beautifully aligned.
