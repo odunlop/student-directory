@@ -29,9 +29,9 @@ end
 
 def input_students
   students = {}
-  
+  count = 0
   while true 
-    puts "What do you want to do in the directory? Add, View or Exit?".center(50, "-")
+    puts "What do you want to do in the directory? Add, View or Exit?"
     choice = gets.chomp.downcase
 
     case choice
@@ -40,16 +40,14 @@ def input_students
       student_name = gets.chomp
       puts "What's the students cohort?".center(50, "-")
       cohort = gets.chomp
-      if cohort == nil
-        students[:unknown] = student_name
-      else
-        students[cohort.to_s] = student_name
+      if students[cohort] == nil
+        students[cohort] = []
       end
+      students[cohort].push(student_name)
+      count += 1
     when "view"
-      count = 0
       students.each do |cohort, name|
-        puts "#{name}, (#{cohort} cohort)"
-        count += 1
+        puts "#{name.join(", ")} (#{cohort} cohort)"
       end
       puts "Overall, we have #{count} great student(s)".center(50, "-")
     when "exit"
