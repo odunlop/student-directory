@@ -1,78 +1,76 @@
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},
-  {name: "Norman Bates", cohort: :november}
-]
+@students = [] # an empty array accessible to all methods
+
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, just hit return twice"
+  name = gets.chomp
+  while !name.empty? do
+    @students << {name: name, cohort: :november}
+    puts "Now we have #{@students.count} students"
+    name = gets.chomp
+  end
+end
+
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  # iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
+  end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to students.csv"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def show_students
+  print_header
+  print_student_list
+  print_footer
+end
+
+def process(selection)
+  case selection
+  when "1"
+    input_students
+  when "2"
+    show_students
+  when "3"
+    save_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you meant, try again"
+  end
+end
 
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
 end
 
-def print(students)
-  if students[0] == nil
-    puts "Error, no students found"
-  else
-    students.each_with_index do |student, index|
-      puts "#{index}: #{student[:name]} (#{student[:cohort]} cohort)"
-    end
+def print_student_list
+  @students.each do |student|
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
-def print_footer(names)
-  puts "Overall, we have #{names.count} great student(s)"
+def print_footer
+  puts "Overall, we have #{@students.count} great students"
 end
 
-def input_students
-  students = {}
-  count = 0
-  while true 
-    puts "What do you want to do in the directory? Add, View or Exit?"
-    choice = gets.chomp.downcase
-
-    case choice
-    when "add"
-      puts "Please enter the name of the student".center(50, "-")
-      student_name = gets.chomp
-      puts "What's the students cohort?".center(50, "-")
-      cohort = gets.chomp
-      if students[cohort] == nil
-        students[cohort] = []
-      end
-      students[cohort].push(student_name)
-      count += 1
-    when "view"
-      students.each do |cohort, name|
-        puts "#{name.join(", ")} (#{cohort} cohort)"
-      end
-      puts "Overall, we have #{count} great student(s)".center(50, "-")
-    when "exit"
-      puts "...Exiting the directory...".center(50, "-")
-      break
-    end
-  end
-end
-
-def initial_search(students, letter)
-  students.each do |student|
-    if student[:name].chr.include?(letter)
-      puts student[:name].center(50, "-")
-    end
-  end
-end
-
-def small_names(students)
-  students.each do |student|
-    if student[:name].chars.count < 12
-      puts student[:name].center(20, "-")
-    end
-  end
-end
+interactive_menu
